@@ -137,4 +137,4 @@ Code development and prototyping were partially assisted by AI coding tools incl
 	•	Gemini (assist with debugging)
 
 # Citation
-If you use this software, please cite it as: K.H.,Ooi.(2026).Probabilistic Colocalization Estimator. version: 1.0.0. date-released: 2026-04-04.https://github.com/mansonmyr/Probabilistic-Colocalization-Estimator
+If you use this software, please cite it as: K.H.,Ooi.(2026).Probabilistic_Colocalization_Estimator. version: 1.0.0. date-released: 2026-04-04.https://github.com/mansonmyr/Probabilistic_Colocalization_Estimator
