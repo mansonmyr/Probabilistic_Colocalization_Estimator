@@ -87,6 +87,14 @@ The software provides zero-overhead transparency to preserve the absolute fideli
     Note: This project utilizes the Noise2Void (N2V) library, which is licensed under the BSD 3-Clause License. Copyright (c) 2018, Alexander Krull, Tim-Oliver Buchholz, Florian Jug. 
     N2V was downloaded from (https://github.com/juglab/n2v). The *dazzling-spider* model was downloaded from Bioimage.io repository (https://archive.bioimage.io/#/?tags=dazzling-spider&id=dazzling-spider)
 
+![Xnip2026-04-04_18-20-06](https://github.com/user-attachments/assets/a6545c2a-7859-4d61-84ff-6c4442046f69)
+
+![Xnip2026-04-04_17-49-50](https://github.com/user-attachments/assets/260d7728-b2dd-4c15-bba1-3882956661da) 
+
+![Xnip2026-04-04_14-51-22](https://github.com/user-attachments/assets/7a35d4a2-11f9-4905-8ddc-5ce664365ef8)
+
+![Xnip2026-04-04_18-08-55](https://github.com/user-attachments/assets/762187f3-1363-48da-8a07-9c197dee39b0)
+
 ---
 
 ## 🚀 Installation & Setup
