@@ -1,0 +1,8 @@
+name: careamics
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+    - torch==2.7.1+cu126
+    - torchvision==0.22.1+cu126
+    - careamics==0.0.16

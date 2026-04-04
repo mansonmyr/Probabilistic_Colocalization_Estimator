@@ -1,0 +1,122 @@
+%YAML 1.2
+---
+name: Hagen_N2V
+id: dazzling-spider
+id_emoji: 🕷
+description: 'This model is a UNet trained with the Noise2Void algorithm to denoise images.
+  The training data consists of laser scanning confocal microscopy images of actin in bovine
+  pulmonary artery endothelial cells. The notebook used to train this model is available on
+  the CAREamics documentation website at the following link: https://careamics.github.io/0.1/applications/Noise2Void/Hagen/.'
+covers:
+  - cover.png
+authors:
+  - affiliation: Human Technopole
+    name: CAREamics authors
+attachments:
+  - source: careamics.yaml
+    sha256: 627e69a89a04e4458bda128627b677db89593a45273800a1f50c67a2f05c01b8
+cite:
+  - text: Krull, A., Buchholz, T.O. and Jug, F., 2019. "Noise2Void - Learning denoising from
+      single noisy images". In Proceedings of the IEEE/CVF conference on computer vision and
+      pattern recognition (pp. 2129-2137).
+    doi: 10.1109/cvpr.2019.00223
+license: BSD-3-Clause
+links:
+  - https://github.com/CAREamics/careamics
+  - https://careamics.github.io/latest/
+tags:
+  - denoising
+  - restoration
+  - UNet
+  - 2D
+  - CAREamics
+  - pytorch
+  - Noise2Void
+version: 0.1.0
+format_version: 0.5.4
+type: model
+documentation: README.md
+inputs:
+  - id: input
+    axes:
+      - type: batch
+      - type: channel
+        channel_names:
+          - channel
+      - size: 256
+        id: y
+        type: space
+      - size: 256
+        id: x
+        type: space
+    test_tensor:
+      source: inputs.npy
+      sha256: 7d4ca2ba60b45a9d69689026fb2b3fb0ba92573e73b109700d36b46e7e8151cf
+    preprocessing:
+      - id: ensure_dtype
+        kwargs:
+          dtype: float32
+      - id: fixed_zero_mean_unit_variance
+        kwargs:
+          mean:
+            - 1719.4048020447358
+          std:
+            - 1388.4454665331452
+          axis: channel
+      - id: ensure_dtype
+        kwargs:
+          dtype: float32
+outputs:
+  - id: prediction
+    axes:
+      - type: batch
+      - type: channel
+        channel_names:
+          - channel
+      - size: 256
+        id: y
+        type: space
+      - size: 256
+        id: x
+        type: space
+    test_tensor:
+      source: outputs.npy
+      sha256: 81da3ad5d7c618b99b395cdc4cdc87b903bf901bea124a045ae7adb80c04794a
+    postprocessing:
+      - id: fixed_zero_mean_unit_variance
+        kwargs:
+          mean:
+            - -1.2383668226449014
+          std:
+            - 0.0007192299430432098
+          axis: channel
+      - id: ensure_dtype
+        kwargs:
+          dtype: float32
+weights:
+  pytorch_state_dict:
+    source: weights.pth
+    sha256: 7f23722d37cb51a1da111dc471833f3b659cfb4a6d1688cd222217ead12fce38
+    architecture:
+      callable: UNet
+      kwargs:
+        conv_dims: 2
+        num_classes: 1
+        in_channels: 1
+        depth: 2
+        num_channels_init: 32
+        final_activation: None
+        n2v2: false
+        independent_channels: true
+        use_batch_norm: true
+      import_from: careamics.models.unet
+    pytorch_version: 2.7.1+cu126
+    dependencies:
+      source: environment.yml
+      sha256: bb314d1b60ff8b12ff6c156525680cd10e7770e1a088e9d7ca29724ffcad6ee0
+config:
+  bioimageio:
+    test_kwargs:
+      pytorch_state_dict:
+        absolute_tolerance: 0.01
+        relative_tolerance: 0.01
