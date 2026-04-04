@@ -41,12 +41,11 @@ const result = spawnSync(
     '--clean', 
     '--onefile', 
     '--name', 'pce-backend', 
-    'app/core/main.py' // <--- Verify this is the correct path to your main Python file!
+    'app/desktop_entry.py' // <--- Verify this is the correct path to your main Python file!
   ],
   {
     cwd: projectRoot, // Start in the root
     stdio: 'inherit',
-    shell: true,
     env: process.env
   }
 );
