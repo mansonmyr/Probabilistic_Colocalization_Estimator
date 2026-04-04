@@ -1,5 +1,0 @@
-# Ignore Jupyter Notebooks in language statistics
-*.ipynb linguist-detectable=false
-
-# If you have vendor folders or specific metadata
-backend/dual_channel_colocalization_backend.egg-info/* linguist-vendored
