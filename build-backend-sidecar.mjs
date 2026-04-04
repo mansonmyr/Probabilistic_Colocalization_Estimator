@@ -41,7 +41,7 @@ const result = spawnSync(
     '--clean', 
     '--onefile', 
     '--name', 'pce-backend', 
-    'app/core/main.py' // <--- Verify this is the correct path to your main Python file!
+    'app copy/core/main.py' // <--- Verify this is the correct path to your main Python file!
   ],
   {
     cwd: projectRoot, // Start in the root
