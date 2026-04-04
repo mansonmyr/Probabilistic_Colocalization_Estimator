@@ -125,3 +125,19 @@ The software provides zero-overhead transparency to preserve the absolute fideli
 ## 🧪 Requirements
 - **Backend**: `FastAPI`, `PyTorch` (for N2V), `statsmodels` (for MLR), `scikit-image`, `scipy`.
 - **Frontend**: `React`, `TypeScript`, `Vite`.
+
+---
+# Disclaimer
+This repository was a Vibe Coding Project for non-coding specialist (like me).
+This project was developed using a combination of open computational platforms and AI-assisted coding tools:
+	•	Google Antigravity
+	•	Codex
+    •	Cursor
+    
+Code development and prototyping were partially assisted by AI coding tools including:
+	•	Gemini
+
+These tools were used to assist with debugging of this software.
+
+# Citation
+If you use this software, please cite it as: K.H.,Ooi.(2026).Probabilistic_Colocalization_Estimator. version: 1.0.0. date-released: 2026-04-4. https://github.com/mansonmyr/Probabilistic_Colocalization_Estimator
