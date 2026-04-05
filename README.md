@@ -145,7 +145,7 @@ python -m venv .venv
 .\.venv\Scripts\activate
 pip install -e .
 ```
-## Frontend:
+## **Frontend Setup for Window**
 Since this software utilize Electron/Vite setup, the user needs to ensure Node.js is installed.
 ```powershell
 cd frontend
@@ -168,22 +168,22 @@ npm install
 npm run dev
 ```
 
-### Git clone for Window**
+### **Git clone for Window**
 ```powershell
 git clone https://github.com/mansonmyr/Probabilistic_Colocalization_Estimator.git
 cd Probabilistic_Colocalization_Estimator
 ```
-# 2. Setup Python Environment
+ 2. Setup Python Environment
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\activate
 pip install -r backend/requirements.txt
 ```
-# 3. Setup Node/Electron
+ 3. Setup Node/Electron
 ```powershell
 npm install
 ```
-# 4. Launch (Assuming your package.json has a concurrent start script)
+ 4. Launch (Assuming your package.json has a concurrent start script)
 ```powershell
 npm run dev
 ```
