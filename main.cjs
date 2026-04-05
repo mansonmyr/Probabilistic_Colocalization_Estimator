@@ -123,7 +123,6 @@ function resolveBackendCommand(port) {
     cwd: backendRoot,
     env: { ...process.env, API_PORT: String(port) }
   };
-}
 
 function startBackend(port) {
   const spec = resolveBackendCommand(port);
