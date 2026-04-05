@@ -4,6 +4,9 @@ on:
     tags:
       - 'v*'
   workflow_dispatch: # This adds the manual "Run" button
+  
+permissions: 
+ contents: write  # This gives the robot permission to create the Release
 
 jobs:
   release:
