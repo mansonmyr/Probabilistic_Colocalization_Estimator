@@ -111,7 +111,7 @@ function stopBackend() {
   }
 }
 
-function waitForBackend(timeoutMs = 60000) {
+function waitForBackend(timeoutMs = 300000) {
   const startedAt = Date.now();
   return new Promise((resolve, reject) => {
     const attempt = () => {
