@@ -30,7 +30,7 @@ if (!python) {
   throw new Error('Unable to locate a Python runtime for the backend build.');
 }
 
-console.log(`🐍 Using Python: ${python}`);
+console.log(` Using Python: ${python}`);
 
 // 3. Run PyInstaller from the ROOT directory
 const result = spawnSync(
@@ -41,11 +41,13 @@ const result = spawnSync(
     '--clean', 
     '--onefile', 
     '--name', 'pce-backend', 
-    'app/desktop_entry.py' // <--- Verify this is the correct path to your main Python file!
+    '--distpath', 'resources',
+    'app/desktop_entry.py'
   ],
   {
     cwd: projectRoot, // Start in the root
     stdio: 'inherit',
+    shell: false,
     env: process.env
   }
 );
