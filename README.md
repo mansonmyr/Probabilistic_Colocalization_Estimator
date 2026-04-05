@@ -127,7 +127,7 @@ The software provides zero-overhead transparency to preserve the absolute fideli
     ```bash
     npm run dev
     ```
-### Backend Setup for Window**
+### **Backend Setup for Window**
 Windows handles Python and Virtual Environments differently than macOS/Linux.
 By default, Windows blocks script execution. Users may need to run this in PowerShell (as Administrator) once:
 ```powershell
