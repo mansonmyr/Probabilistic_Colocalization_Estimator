@@ -50,9 +50,8 @@
         "from": ".",
         "to": "backend",
         "filter": [
-          "app/**/*",           // Include your python code folder
-          "pce-backend",        // Include the executable
-          "model_configs/**/*"
+          "app/**/*",           
+          "pce-backend",        
         ]
       }
     ],
