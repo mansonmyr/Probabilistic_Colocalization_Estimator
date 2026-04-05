@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "main": "electron-wrapper/main.cjs",
+  "main": "main.js",
   "description": "Probabilistic Colocalization Estimator",
   "author": "Kai Hong Ooi, mansonooi@yahoo.com",
   
@@ -38,6 +38,12 @@
     "directories": {
       "output": "dist_electron"
     },
+    "files": [
+      "dist/**/*",
+      "main.cjs",
+      "electron/**/*", 
+      "resources/**/*"
+    ],
     
     "extraResources": [
       {
