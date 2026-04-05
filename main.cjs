@@ -7,7 +7,9 @@ const net = require('node:net');
 const path = require('node:path');
 
 const projectRoot = __dirname;
-const backendRoot = path.join(projectRoot, 'backend');
+const backendRoot = app.isPackaged 
+  ? path.join(process.resourcesPath, 'backend') 
+  : __dirname; // On GitHub root, the files are just in __dirname
 
 let backendProcess = null;
 let ipcRegistered = false;
