@@ -103,22 +103,19 @@ function resolveDevPython() {
 }
 
 function resolveBackendCommand(port) {
-  if (app.isPackaged) {
-    const executable = path.join(
-      process.resourcesPath,
-      'backend',
-      process.platform === 'win32' ? 'pce-backend.exe' : 'pce-backend'
-    );
-    if (!fs.existsSync(executable)) {
-      throw new Error(`Packaged backend executable not found at ${executable}`);
-    }
-    return {
-      command: executable,
-      args: [],
-      cwd: path.dirname(executable),
-      env: { ...process.env, API_PORT: String(port) }
-    };
-  }
+  const executable = app.isPackaged
+    ? path.join(process.resourcesPath, 'backend', 'pce-backend')
+    : path.join(__dirname, 'pce-backend');
+
+  console.log("Attempting to launch backend at:", executable);
+
+  return {
+    command: executable,
+    args: [], // Your backend handles its own port 8000
+    cwd: path.dirname(executable),
+    env: { ...process.env, API_PORT: "8000" }
+  };
+}
 
   return {
     command: resolveDevPython(),
