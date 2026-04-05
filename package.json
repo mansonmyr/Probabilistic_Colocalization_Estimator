@@ -33,7 +33,7 @@
   },
   "build": {
     "appId": "com.ooi.pce",
-    "productName": "Colocalization Workbench",
+    "productName": "PCE Workbench",
     
     "directories": {
       "output": "dist_electron"
