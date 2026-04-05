@@ -43,6 +43,9 @@ jobs:
       - name: Install Node Dependencies
         run: npm install
 
+      - name: Make backend executable
+        run: chmod +x ./pce-backend
+
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
