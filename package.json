@@ -47,8 +47,8 @@
     
     "extraResources": [
       {
-        "from": "resources",
-        "to": "resources",
+        "from": "backend",
+        "to": "backend",
         "filter": ["**/*"]
       }
     ],
