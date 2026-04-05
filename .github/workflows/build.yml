@@ -44,6 +44,7 @@ jobs:
         run: npm install
 
       - name: Make backend executable
+        if: matrix.os == 'macos-latest'
         run: chmod +x ./pce-backend
 
       - name: Build/release Electron app
