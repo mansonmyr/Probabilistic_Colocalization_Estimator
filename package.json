@@ -51,7 +51,7 @@
         "to": "backend",
         "filter": [
           "app/**/*",           
-          "pce-backend",        
+          "pce-backend"        
         ]
       }
     ],
