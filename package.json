@@ -31,23 +31,26 @@
   "build": {
     "appId": "com.ooi.pce",
     "productName": "Colocalization Workbench",
+    "description": "Probabilistic Colocalization Estimator",
+    "author": "Kai Hong Ooi, mansonooi@yahoo.com",
+    
     "directories": {
       "output": "dist_electron"
     },
     "files": [
       "dist/**/*",
-      "electron/main.cjs",
+      "electron/**/*",
       "resources/**/*"
     ],
+    
     "extraResources": [
       {
         "from": "resources",
         "to": "resources",
-        "filter": [
-          "**/*"
-        ]
+        "filter": ["**/*"]
       }
     ],
+    
     "mac": {
       "category": "public.app-category.education",
       "target": "dmg"
@@ -56,5 +59,4 @@
       "target": "portable"
     }
   }
-}
 
