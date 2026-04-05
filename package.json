@@ -47,9 +47,13 @@
     
     "extraResources": [
       {
-        "from": "backend",
+        "from": ".",
         "to": "backend",
-        "filter": ["**/*"]
+        "filter": [
+          "app/**/*",           // Include your python code folder
+          "pce-backend",        // Include the executable
+          "model_configs/**/*"
+        ]
       }
     ],
     
