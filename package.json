@@ -40,9 +40,9 @@
     },
     "files": [
       "dist/**/*",
-      "main.cjs",
-      "electron/**/*", 
-      "resources/**/*"
+      "electron-wrapper/**/*", 
+      "main.js",
+      "package.json"
     ],
     
     "extraResources": [
