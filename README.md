@@ -1,6 +1,6 @@
 # Probabilistic Colocalization Estimator (PCE)
 
-A ROI-centric bioimage analysis workbench for 8-bit/16-bit multichannel TIFF data. This tool provides robust statistical estimates of protein-protein overlap and correlation with absolute raw data fidelity, specifically designed for high-precision immunofluorescence research. This software allows an alternative options other than the traditional colocalization analysis software such as *JaCOP* and *Coloc 2* in Fiji/ImageJ.
+A ROI-centric bioimage analysis workbench for 8-bit/16-bit multichannel TIFF data. This tool provides robust statistical estimates of protein-protein overlap and correlation with absolute raw data fidelity, specifically designed for high-precision immunofluorescence research. This software allows an alternative options other than the traditional colocalization analysis software such as *JaCOP* and *Coloc 2* in Fiji/ImageJ. This idea is genuinely original (except the known colocalization metrics) by the author of this repository, please contact if you would like to share to the social media or re-creation.
 
 ---
 
@@ -143,6 +143,8 @@ This project was developed using a combination of open computational platforms a
     
 Code development and prototyping were partially assisted by AI coding tools including:
 	•	Gemini (assist with debugging)
+
+This idea is genuinely original (except the known colocalization metrics) by the author of this repository, please contact if you would like to share to the social media or re-creation.
 
 # Citation
 If you use this software, please cite it as: K.H.,Ooi.(2026).Probabilistic_Colocalization_Estimator. version: 1.0.0. date-released: 2026-04-04.https://github.com/mansonmyr/Probabilistic_Colocalization_Estimator
