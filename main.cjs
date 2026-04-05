@@ -3,14 +3,9 @@ const { spawn } = require('node:child_process');
 const fs = require('node:fs');
 const http = require('node:http');
 const https = require('node:https');
-const net = require('node:net');
 const path = require('node:path');
 
 const projectRoot = __dirname;
-const backendRoot = app.isPackaged 
-  ? path.join(process.resourcesPath, 'backend') 
-  : __dirname; // On GitHub root, the files are just in __dirname
-
 let backendProcess = null;
 let ipcRegistered = false;
 let shuttingDown = false;
@@ -29,24 +24,18 @@ function normalizeApiUrl(value) {
 
 function joinApiUrl(base, endpoint) {
   const normalizedBase = normalizeApiUrl(base);
-  if (!normalizedBase) {
-    return endpoint;
-  }
+  if (!normalizedBase) return endpoint;
   return `${normalizedBase}/${String(endpoint).replace(/^\/+/, '')}`;
 }
 
 function syncRuntimeConfig(partial = {}) {
   const localApiUrl = normalizeApiUrl(partial.localApiUrl ?? runtimeConfig.localApiUrl) ?? runtimeConfig.localApiUrl;
-  const remoteApiUrl =
-    partial.remoteApiUrl === undefined ? runtimeConfig.remoteApiUrl : normalizeApiUrl(partial.remoteApiUrl);
+  const remoteApiUrl = partial.remoteApiUrl === undefined ? runtimeConfig.remoteApiUrl : normalizeApiUrl(partial.remoteApiUrl);
   const mode = remoteApiUrl ? 'remote' : 'local';
-  const effectiveApiUrl = normalizeApiUrl(
-    partial.effectiveApiUrl ?? (mode === 'remote' ? remoteApiUrl : localApiUrl)
-  ) ?? localApiUrl;
-
+  
   runtimeConfig.localApiUrl = localApiUrl;
   runtimeConfig.remoteApiUrl = remoteApiUrl;
-  runtimeConfig.effectiveApiUrl = effectiveApiUrl;
+  runtimeConfig.effectiveApiUrl = normalizeApiUrl(partial.effectiveApiUrl ?? (mode === 'remote' ? remoteApiUrl : localApiUrl)) ?? localApiUrl;
   runtimeConfig.mode = mode;
   return getRuntimePayload();
 }
@@ -62,73 +51,34 @@ function getRuntimePayload() {
   };
 }
 
-function validateRemoteUrl(value) {
-  try {
-    const parsed = new URL(value);
-    if (!['http:', 'https:'].includes(parsed.protocol)) {
-      throw new Error('unsupported');
-    }
-  } catch {
-    throw new Error('Remote API URL must be a valid http or https URL.');
+function resolveBackendCommand() {
+  // Hardcoded to port 8000 to match your Python backend
+  const port = 8000; 
+
+  if (app.isPackaged) {
+    const executable = path.join(process.resourcesPath, 'backend', process.platform === 'win32' ? 'pce-backend.exe' : 'pce-backend');
+    return {
+      command: executable,
+      args: [],
+      cwd: path.dirname(executable),
+      env: { ...process.env, API_PORT: String(port) }
+    };
   }
-}
 
-function getFreePort() {
-  return new Promise((resolve, reject) => {
-    const server = net.createServer();
-    server.listen(0, '127.0.0.1', () => {
-      const address = server.address();
-      if (!address || typeof address === 'string') {
-        server.close();
-        reject(new Error('Failed to allocate a localhost port.'));
-        return;
-      }
-      const { port } = address;
-      server.close(() => resolve(port));
-    });
-    server.on('error', reject);
-  });
-}
-
-function resolveDevPython() {
-  const candidate = path.join(
-    backendRoot,
-    '.venv',
-    process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python'
-  );
-  if (!fs.existsSync(candidate)) {
-    throw new Error(`Python runtime not found at ${candidate}`);
-  }
-  return candidate;
-}
-
-function resolveBackendCommand(port) {
-  const executable = app.isPackaged
-    ? path.join(process.resourcesPath, 'backend', 'pce-backend')
-    : path.join(__dirname, 'pce-backend');
-
-  console.log("Attempting to launch backend at:", executable);
-
+  // Dev mode (if you ever run npm run dev again)
+  const pythonPath = path.join(__dirname, '.venv', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python');
   return {
-    command: executable,
-    args: [], // Your backend handles its own port 8000
-    cwd: path.dirname(executable),
-    env: { ...process.env, API_PORT: "8000" }
-  };
-}
-
-  return {
-    command: resolveDevPython(),
+    command: pythonPath,
     args: ['-m', 'app.desktop_entry'],
-    cwd: backendRoot,
+    cwd: __dirname,
     env: { ...process.env, API_PORT: String(port) }
   };
+}
 
-function startBackend(port) {
-  const spec = resolveBackendCommand(port);
+function startBackend() {
+  const spec = resolveBackendCommand();
   
-  // LOG THE EXACT COMMAND BEING RUN
-  console.log(`Spawning backend: ${spec.command} in ${spec.cwd}`);
+  console.log(`[Electron] Starting backend at: ${spec.command}`);
 
   backendProcess = spawn(spec.command, spec.args, {
     cwd: spec.cwd,
@@ -136,37 +86,29 @@ function startBackend(port) {
     stdio: ['ignore', 'pipe', 'pipe']
   });
 
-  // CATCH SPAWN ERRORS (e.g., ENOENT or EACCES)
-  backendProcess.on('error', (err) => {
-    dialog.showErrorBox('Failed to Start Backend Process', 
-      `Error: ${err.message}\nPath: ${spec.command}`);
+  backendProcess.stdout?.on('data', (chunk) => {
+    const text = chunk.toString().trim();
+    if (text) console.log(`[backend] ${text}`);
   });
 
   backendProcess.stderr?.on('data', (chunk) => {
     const text = chunk.toString().trim();
-    // If there's a Python error, show it immediately!
-    if (text.toLowerCase().includes('error') || text.toLowerCase().includes('traceback')) {
-       dialog.showErrorBox('Backend Runtime Error', text);
-    }
+    if (text) console.error(`[backend] ${text}`);
   });
 
   backendProcess.once('exit', (code) => {
     if (!shuttingDown && code !== 0) {
-      dialog.showErrorBox(
-        'Backend exited unexpectedly',
-        `The FastAPI backend stopped before the desktop app finished. Exit code: ${code ?? 'unknown'}`
-      );
+      console.error(`Backend exited with code: ${code}`);
     }
     backendProcess = null;
   });
 }
 
 function stopBackend() {
-  if (!backendProcess) {
-    return;
+  if (backendProcess) {
+    backendProcess.kill();
+    backendProcess = null;
   }
-  backendProcess.kill();
-  backendProcess = null;
 }
 
 function waitForBackend(timeoutMs = 60000) {
@@ -192,139 +134,27 @@ function waitForBackend(timeoutMs = 60000) {
 }
 
 function registerIpc() {
-  if (ipcRegistered) {
-    return;
-  }
+  if (ipcRegistered) return;
   ipcRegistered = true;
 
   ipcMain.handle('desktop:get-runtime-config', async () => getRuntimePayload());
   ipcMain.handle('desktop:get-runtime', async () => getRuntimePayload());
-  ipcMain.handle('desktop:set-remote-api-url', async (_event, url) => {
-    const normalized = normalizeApiUrl(url);
-    if (normalized) {
-      validateRemoteUrl(normalized);
-    }
-    return syncRuntimeConfig({ remoteApiUrl: normalized });
-  });
-  ipcMain.handle('desktop:upload-image-remote', async (_event, args) => uploadImageToRemote(args));
+  ipcMain.handle('desktop:set-remote-api-url', async (_event, url) => syncRuntimeConfig({ remoteApiUrl: normalizeApiUrl(url) }));
   ipcMain.handle('desktop:open-experiment-folder', () => openFolderDialog('Open experiment folder'));
   ipcMain.handle('desktop:open-qwen-repo-folder', () => openFolderDialog('Select Qwen repo folder'));
   ipcMain.handle('desktop:open-weights-folder', () => openFolderDialog('Select Qwen weights folder'));
 }
 
 async function openFolderDialog(title) {
-  const result = await dialog.showOpenDialog({
-    title,
-    properties: ['openDirectory', 'createDirectory']
-  });
-  return {
-    folderPath: result.canceled ? null : result.filePaths[0] ?? null
-  };
-}
-
-async function uploadImageToRemote({ imagePath, remoteApiUrl }) {
-  if (!imagePath) {
-    throw new Error('No TIFF path was provided for remote upload.');
-  }
-
-  const targetRoot = normalizeApiUrl(remoteApiUrl ?? runtimeConfig.remoteApiUrl);
-  if (!targetRoot) {
-    throw new Error('Remote API URL is not configured.');
-  }
-  validateRemoteUrl(targetRoot);
-
-  const stat = await fs.promises.stat(imagePath);
-  if (!stat.isFile()) {
-    throw new Error('Selected TIFF path is not a file.');
-  }
-
-  const safeFilename = path.basename(imagePath).replace(/[\r\n"]/g, '_');
-  const boundary = `----PCEBoundary${Date.now().toString(16)}${Math.random().toString(16).slice(2)}`;
-  const preamble = Buffer.from(
-    `--${boundary}\r\n` +
-      `Content-Disposition: form-data; name="file"; filename="${safeFilename}"\r\n` +
-      'Content-Type: image/tiff\r\n\r\n'
-  );
-  const epilogue = Buffer.from(`\r\n--${boundary}--\r\n`);
-  const targetUrl = new URL(joinApiUrl(targetRoot, '/api/images'));
-  const transport = targetUrl.protocol === 'https:' ? https : http;
-
-  return new Promise((resolve, reject) => {
-    let settled = false;
-    const request = transport.request(
-      {
-        protocol: targetUrl.protocol,
-        hostname: targetUrl.hostname,
-        port: targetUrl.port || undefined,
-        path: `${targetUrl.pathname}${targetUrl.search}`,
-        method: 'POST',
-        headers: {
-          'Content-Type': `multipart/form-data; boundary=${boundary}`,
-          'Content-Length': preamble.length + stat.size + epilogue.length
-        }
-      },
-      (response) => {
-        const chunks = [];
-        response.on('data', (chunk) => {
-          chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
-        });
-        response.on('end', () => {
-          if (settled) {
-            return;
-          }
-          settled = true;
-          const body = Buffer.concat(chunks).toString('utf8');
-          if (response.statusCode >= 200 && response.statusCode < 300) {
-            try {
-              resolve(JSON.parse(body));
-            } catch {
-              reject(new Error('Remote upload returned an invalid JSON payload.'));
-            }
-            return;
-          }
-          reject(new Error(body || `Remote upload failed with ${response.statusCode}`));
-        });
-      }
-    );
-
-    request.on('error', (error) => {
-      if (settled) {
-        return;
-      }
-      settled = true;
-      reject(error);
-    });
-
-    request.write(preamble);
-
-    const stream = fs.createReadStream(imagePath);
-    stream.on('error', (error) => {
-      if (settled) {
-        return;
-      }
-      settled = true;
-      request.destroy(error);
-      reject(error);
-    });
-    stream.on('end', () => {
-      request.end(epilogue);
-    });
-    stream.pipe(request, { end: false });
-  });
+  const result = await dialog.showOpenDialog({ title, properties: ['openDirectory', 'createDirectory'] });
+  return { folderPath: result.canceled ? null : result.filePaths[0] ?? null };
 }
 
 async function createMainWindow() {
   const { width: workAreaWidth, height: workAreaHeight } = screen.getPrimaryDisplay().workAreaSize;
-  const minWidth = Math.max(900, Math.min(1220, Math.floor(workAreaWidth * 0.74)));
-  const minHeight = Math.max(640, Math.min(860, Math.floor(workAreaHeight * 0.74)));
-  const width = Math.max(minWidth, Math.floor(workAreaWidth * 0.92));
-  const height = Math.max(minHeight, Math.floor(workAreaHeight * 0.92));
-
   const window = new BrowserWindow({
-    width,
-    height,
-    minWidth,
-    minHeight,
+    width: Math.max(900, Math.floor(workAreaWidth * 0.92)),
+    height: Math.max(640, Math.floor(workAreaHeight * 0.92)),
     backgroundColor: '#0f172a',
     title: 'Probabilistic Colocalization Estimator',
     webPreferences: {
@@ -334,58 +164,30 @@ async function createMainWindow() {
     }
   });
 
-  window.webContents.on('render-process-gone', () => {
-    if (!shuttingDown) {
-      stopBackend();
-    }
-  });
+  window.webContents.on('render-process-gone', () => { if (!shuttingDown) stopBackend(); });
 
   if (process.env.ELECTRON_RENDERER_URL) {
     await window.loadURL(process.env.ELECTRON_RENDERER_URL);
   } else {
     await window.loadFile(path.join(projectRoot, 'dist', 'index.html'));
   }
-
   return window;
 }
 
 async function bootstrap() {
-  const port = 8000;
-  syncRuntimeConfig({
-    localApiUrl: `http://127.0.0.1:8000`
-  });
   registerIpc();
-  startBackend(port);
+  startBackend();
   await waitForBackend();
   await createMainWindow();
 }
 
 app.whenReady().then(bootstrap).catch((error) => {
   console.error(error);
-  dialog.showErrorBox('Desktop startup failed', String(error));
+  dialog.showErrorBox('Startup Failed', String(error));
   app.quit();
 });
 
-app.on('before-quit', () => {
-  shuttingDown = true;
-  stopBackend();
-});
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
-
-app.on('activate', async () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    await createMainWindow();
-  }
-});
-
+app.on('before-quit', () => { shuttingDown = true; stopBackend(); });
+app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
 process.on('exit', stopBackend);
-process.on('SIGINT', () => {
-  shuttingDown = true;
-  stopBackend();
-  process.exit(0);
-});
+process.on('SIGINT', () => { shuttingDown = true; stopBackend(); process.exit(0); });
