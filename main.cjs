@@ -130,23 +130,27 @@ function resolveBackendCommand(port) {
 
 function startBackend(port) {
   const spec = resolveBackendCommand(port);
+  
+  // LOG THE EXACT COMMAND BEING RUN
+  console.log(`Spawning backend: ${spec.command} in ${spec.cwd}`);
+
   backendProcess = spawn(spec.command, spec.args, {
     cwd: spec.cwd,
     env: spec.env,
     stdio: ['ignore', 'pipe', 'pipe']
   });
 
-  backendProcess.stdout?.on('data', (chunk) => {
-    const text = chunk.toString().trim();
-    if (text) {
-      console.log(`[backend] ${text}`);
-    }
+  // CATCH SPAWN ERRORS (e.g., ENOENT or EACCES)
+  backendProcess.on('error', (err) => {
+    dialog.showErrorBox('Failed to Start Backend Process', 
+      `Error: ${err.message}\nPath: ${spec.command}`);
   });
 
   backendProcess.stderr?.on('data', (chunk) => {
     const text = chunk.toString().trim();
-    if (text) {
-      console.error(`[backend] ${text}`);
+    // If there's a Python error, show it immediately!
+    if (text.toLowerCase().includes('error') || text.toLowerCase().includes('traceback')) {
+       dialog.showErrorBox('Backend Runtime Error', text);
     }
   });
 
