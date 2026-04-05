@@ -127,7 +127,21 @@ The software provides zero-overhead transparency to preserve the absolute fideli
     ```bash
     npm run dev
     ```
-
+    
+### **Git clone**
+```bash
+git clone https://github.com/mansonmyr/Probabilistic_Colocalization_Estimator.git
+cd Probabilistic_Colocalization_Estimator
+```
+```bash
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+```bash
+npm install
+npm run dev
+```
 ---
 
 ## 🧪 Requirements
