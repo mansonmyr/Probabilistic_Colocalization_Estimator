@@ -145,7 +145,7 @@ python -m venv .venv
 .\.venv\Scripts\activate
 pip install -e .
 ```
-## **Frontend Setup for Window**
+### **Frontend Setup for Window**
 Since this software utilize Electron/Vite setup, the user needs to ensure Node.js is installed.
 ```powershell
 cd frontend
