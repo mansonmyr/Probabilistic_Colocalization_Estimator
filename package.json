@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "main": "main.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -26,6 +27,34 @@
     "vitest": "^2.0.5",
     "electron": "^30.0.0",
     "electron-builder": "^26.8.1"
+  },
+  "build": {
+    "appId": "com.ooi.pce",
+    "productName": "Colocalization Workbench",
+    "directories": {
+      "output": "dist_electron"
+    },
+    "files": [
+      "dist/**/*",
+      "main.js",
+      "resources/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "resources",
+        "to": "resources",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.education",
+      "target": "dmg"
+    },
+    "win": {
+      "target": "portable"
+    }
   }
 }
 
