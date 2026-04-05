@@ -4,6 +4,9 @@
   "private": true,
   "type": "module",
   "main": "electron/main.cjs",
+  "description": "Probabilistic Colocalization Estimator",
+  "author": "Kai Hong Ooi, mansonooi@yahoo.com",
+  
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -31,8 +34,6 @@
   "build": {
     "appId": "com.ooi.pce",
     "productName": "Colocalization Workbench",
-    "description": "Probabilistic Colocalization Estimator",
-    "author": "Kai Hong Ooi, mansonooi@yahoo.com",
     
     "directories": {
       "output": "dist_electron"
