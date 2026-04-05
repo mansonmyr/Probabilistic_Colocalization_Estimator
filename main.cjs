@@ -350,9 +350,9 @@ async function createMainWindow() {
 }
 
 async function bootstrap() {
-  const port = await getFreePort();
+  const port = 8000;
   syncRuntimeConfig({
-    localApiUrl: `http://127.0.0.1:${port}`
+    localApiUrl: `http://127.0.0.1:8000`
   });
   registerIpc();
   startBackend(port);
