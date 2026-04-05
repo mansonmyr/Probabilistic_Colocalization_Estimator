@@ -97,14 +97,14 @@ The software provides zero-overhead transparency to preserve the absolute fideli
 
 ---
 
-## 🚀 Installation & Setup
+## 🚀 Installation & Setup 
 
 ### **Image set-up**
 0. **Fiji/ImageJ Preprocessing**:
     Image can be 8-bit or 16-bit, and suggested to use smaller (e.g. 512x512) pixel size, else it would take a long time on local cpu. Size can be adjusted in Fiji by **Image > Scale**. It would be better to keep the aspect ratio the same, and do not use Maximum Intensity Projection for z-stack.
     If the image is in RGB (merged), please split cell first, before re-merging it into **composite** in FIji/ImageJ. 
 
-### **Backend Setup (Python 3.11+)**
+### **Backend Setup (Python 3.11+) for Mac**
 1. **Prepare Environment**:
     ```bash
     cd backend
@@ -127,8 +127,28 @@ The software provides zero-overhead transparency to preserve the absolute fideli
     ```bash
     npm run dev
     ```
-    
-### **Git clone**
+### Backend Setup for Window**
+Windows handles Python and Virtual Environments differently than macOS/Linux.
+By default, Windows blocks script execution. Users may need to run this in PowerShell (as Administrator) once:
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+```powershell
+cd backend
+python -m venv .venv
+# Note the backslash and the specific Script name for Windows
+.\.venv\Scripts\activate
+pip install -e .
+```
+## Frontend:
+Since this software utilize Electron/Vite setup, the user needs to ensure Node.js is installed.
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+### **Git clone for Mac**
 ```bash
 git clone https://github.com/mansonmyr/Probabilistic_Colocalization_Estimator.git
 cd Probabilistic_Colocalization_Estimator
@@ -140,6 +160,26 @@ pip install -r requirements.txt
 ```
 ```bash
 npm install
+npm run dev
+```
+
+### Git clone for Window**
+```powershell
+git clone https://github.com/mansonmyr/Probabilistic_Colocalization_Estimator.git
+cd Probabilistic_Colocalization_Estimator
+```
+# 2. Setup Python Environment
+```powershell
+python -m venv .venv
+.\.venv\Scripts\activate
+pip install -r backend/requirements.txt
+```
+# 3. Setup Node/Electron
+```powershell
+npm install
+```
+# 4. Launch (Assuming your package.json has a concurrent start script)
+```powershell
 npm run dev
 ```
 ---
