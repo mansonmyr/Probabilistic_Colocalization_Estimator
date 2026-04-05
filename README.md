@@ -102,7 +102,12 @@ The software provides zero-overhead transparency to preserve the absolute fideli
 ### **Image set-up**
 0. **Fiji/ImageJ Preprocessing**:
     Image can be 8-bit or 16-bit, and suggested to use smaller (e.g. 512x512) pixel size, else it would take a long time on local cpu. Size can be adjusted in Fiji by **Image > Scale**. It would be better to keep the aspect ratio the same, and do not use Maximum Intensity Projection for z-stack.
-    If the image is in RGB (merged), please split cell first, before re-merging it into **composite** in FIji/ImageJ. 
+    If the image is in RGB (merged), please split cell first, before re-merging it into **composite** in FIji/ImageJ.
+
+	**Note for different OS user**:
+   Please notice that there are two main.cjs file, please only keep the respective OS version in your path before running the software.
+   1. main.cjs - for Mac
+   2. main-window.cjs - for Window
 
 ### **Backend Setup (Python 3.11+) for Mac**
 1. **Prepare Environment**:
