@@ -38,11 +38,6 @@
     "directories": {
       "output": "dist_electron"
     },
-    "files": [
-      "dist/**/*",
-      "electron-wrapper/**/*",
-      "resources/**/*"
-    ],
     
     "extraResources": [
       {
