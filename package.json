@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "main": "main.js",
+  "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -36,7 +36,7 @@
     },
     "files": [
       "dist/**/*",
-      "main.js",
+      "electron/main.cjs",
       "resources/**/*"
     ],
     "extraResources": [
