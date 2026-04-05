@@ -6,7 +6,7 @@ const https = require('node:https');
 const net = require('node:net');
 const path = require('node:path');
 
-const projectRoot = path.resolve(__dirname, '..');
+const projectRoot = __dirname;
 const backendRoot = path.join(projectRoot, 'backend');
 
 let backendProcess = null;
@@ -341,7 +341,7 @@ async function createMainWindow() {
   if (process.env.ELECTRON_RENDERER_URL) {
     await window.loadURL(process.env.ELECTRON_RENDERER_URL);
   } else {
-    await window.loadFile(path.join(projectRoot, 'frontend', 'dist', 'index.html'));
+    await window.loadFile(path.join(projectRoot, 'dist', 'index.html'));
   }
 
   return window;
