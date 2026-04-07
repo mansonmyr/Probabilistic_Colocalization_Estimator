@@ -2,6 +2,12 @@
 
 A ROI-centric bioimage analysis workbench for 8-bit/16-bit multichannel TIFF data. This tool provides robust statistical estimates of protein-protein overlap and correlation with absolute raw data fidelity, specifically designed for high-precision immunofluorescence research. This software allows an alternative options other than the traditional colocalization analysis software such as *JaCOP* and *Coloc 2* in Fiji/ImageJ. This idea is genuinely original (except the known colocalization metrics) by the author of this repository, please contact if you would like to share to the social media or re-creation.
 
+<p align="center">
+  <a href="https://pce-light-demo.netlify.app">
+    <img src="https://img.shields.io/badge/Launch_Live_Demo-00AD9F?style=for-the-badge&logo=netlify&logoColor=white" alt="Live Demo">
+  </a>
+</p>
+
 ---
 
 ## 🔬 Scientific Interpretation: Measurement Readout
